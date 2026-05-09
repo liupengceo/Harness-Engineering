@@ -109,3 +109,32 @@
 - Martin Fowler 站《Harness Engineering — first thoughts》、《Humans and Agents in Software Engineering Loops》
 
 详细来源见 [docs/harness-engineering/09-references.md](./docs/harness-engineering/09-references.md)。
+
+## Contributing
+
+贡献指南见 [CONTRIBUTING.md](./CONTRIBUTING.md)。
+
+关键要点:
+
+- 这个仓库是 starter kit,通常你**应该 fork 后改**,而不是把业务规则 PR 回来。
+- 所有改动走 `AGENTS.md § 3` 的标准流程(ExecPlan → plan checkpoint → code → review persona → CI → human acceptance)。
+- Harness 改动(`AGENTS.md` / `.kiro/steering/` / `templates/` / `scripts/` / `.github/workflows/`)要独立 PR,带 `harness-change` label。
+
+## 行为规范
+
+本项目采用 [Contributor Covenant v2.1](./CODE_OF_CONDUCT.md)。
+
+## 安全
+
+**不要**在公开 issue 里报漏洞。见 [SECURITY.md](./SECURITY.md)。
+
+## License
+
+本仓库采用 [Apache License, Version 2.0](./LICENSE)。
+
+核心意思(不构成法律意见):
+
+- 你可以**免费**使用、修改、再分发本仓库内容,包括用在 proprietary 项目里。
+- 你的 fork 必须保留 LICENSE + 显著标注你对文件的修改。
+- 本仓库给予你专利 grant,但如果你为此发起专利诉讼,grant 自动终止。
+- **本仓库按 "AS IS" 提供,无任何明示或暗示的担保。**
