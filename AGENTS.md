@@ -303,16 +303,28 @@
 
 ---
 
-## 14. 推荐使用的命令集(如果 agent 平台支持)
+## 14. 语义约定(**不是** API 契约)
 
-| 命令 | 效果 |
-|---|---|
-| `/plan <issue>` | 基于 issue 产出 `ExecPlan.md` 草稿 |
-| `/context <path>` | 拉取 `<path>` 的 impact map + 相关 ADR / steering |
-| `/review <persona>` | 用指定 persona(或 `all`)对当前 diff 做评审 |
-| `/handoff` | 写下一次 session 的 HANDOFF 草稿 |
-| `/harness-change <reason>` | 起一个 harness 改动 PR,自动带退役条件字段 |
-| `/acceptance check` | 根据 issue 上的 rubric 对当前产物做机器化验收 |
+> **Important**:本节列出的"命令"是**语义约定**(semantic conventions),**不是**本仓库实现了的 slash-command API。你(agent)**不应**假设 `/plan` 这样的 literal 字符串在你的运行时里被识别。
+>
+> 如果你的 agent 平台(Codex CLI / Claude Code / Cursor / Kiro / …)支持 slash command,**建议**把本节的语义映射过去。否则,用"手动等价流程"达成**同样的结果**即可。
+
+每条"命令"本质上是"一个预期的 artifact + 一段预期流程"。详细的手动等价与各平台对接建议见 [`docs/agent-commands.md`](./docs/agent-commands.md)。
+
+| 语义 | 预期结果(artifact / 状态变化) | 手动等价(最小可行) |
+|---|---|---|
+| `/plan <issue>` | `plan/execplans/<date>-<slug>.md` 填好,是 PR 第一个 commit | 读 issue → 复制 `templates/ExecPlan.md` → 逐节填 → commit |
+| `/context <path>` | 注入 "impact map + 相关 ADR / steering 片段" 到当前对话 | `grep -rn <key> . && ls docs/adr/` → 挑最相关的读 |
+| `/review <persona>` | 对当前 diff 产出**一份符合 `templates/review-personas/README.md § 3` schema 的 YAML** | 读对应 `templates/review-personas/<persona>.md` 作为 system prompt → 让一个 agent 按它评审 → 落 YAML |
+| `/handoff` | `plan/sessions/<N>.md` + 更新 `plan/HANDOFF.md` | 按 `plan/HANDOFF.md` 的 8 段模板手写一份新 session 记录 |
+| `/harness-change <reason>` | 用 `?template=harness_change.md` 开 PR,标 `harness-change` label,登记 `.kiro/steering/DEPRECATION.md` | 见 `AGENTS.md § 3.4` |
+| `/acceptance` | 对照 issue 上的 rubric **机器化**打分 | 逐条 rubric 执行 → 写入 PR 评论 |
+
+**反模式**:
+
+- ❌ 因为你的平台不支持 `/plan` 就跳过 ExecPlan。语义才是硬要求,语法不是。
+- ❌ 把这些字符串当工具名去问"有这个工具吗"。它们**不是**工具。
+- ❌ 看到 `/review security` 就期待有一个 bot 被触发。触发是 CI 的事,你只需要产出符合 schema 的 YAML。
 
 ---
 
