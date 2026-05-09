@@ -175,7 +175,23 @@ inclusion: manual
 
 ---
 
-## 7. 维护者
+## 7. Cross-reference integrity check(2026-05-09)
+
+- **位置**:`scripts/check_cross_refs.py` + `.github/workflows/cross-refs.yml`
+- **约束**:PR 不得引入"指向不存在的文件或不存在的 § N"的内部 markdown 交叉引用
+- **针对的问题**:self-review P1 #6。agent 会把 "见 AGENTS.md § 3.1" 当作权威指示;如果 § 3.1 被重命名,agent 读到的是指向虚空的规则
+- **退役条件**:**长期保留**。这是对内部引用这种常见失效模式的机械防线,与模型缺陷无关。若未来改用不同的引用风格(如 slug anchor),需同步改正则
+
+## 8. Quarterly harness review automation(2026-05-09)
+
+- **位置**:`.github/workflows/quarterly-harness-review.yml`
+- **约束**:每季度第 1 天(Feb/May/Aug/Nov)自动在仓库开一个 `harness-review` issue,含 DEPRECATION.md Active 条目清单 + 5 条复审问题
+- **针对的问题**:self-review P1 #9 —— DEPRECATION.md 自己在老化
+- **退役条件**:**长期保留**。除非 DEPRECATION.md 本身被淘汰(不预期)。若发现 cron 频繁被忽略,把 assignee 从 CODEOWNERS 扩到 team,并把 overdue 超过 2 周的 issue 拉入"收紧规则"复审
+
+---
+
+## 9. 维护者
 
 - 本台账的 steward:`@repo-owner`(请替换为实际 owner)。
 - Steward 不负责写每一条,但负责:
