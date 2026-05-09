@@ -1,0 +1,186 @@
+name: review-personas
+
+# -----------------------------------------------------------------
+# 目标: 在 PR 上自动执行 /templates/review-personas/ 里定义的评审 persona。
+#
+# 运行模型 (harness):
+#   1. Reusable bootstrap (本文件):
+#      - 拿到 PR diff + labels
+#      - 调 scripts/select_personas.py 选出需要跑的 persona
+#      - 把选中 persona 的 system prompt 文件路径 + diff 装进一个 job matrix
+#      - 调用 review-agent 适配器 (scripts/run_review_persona.sh)
+#      - 聚合每个 persona 的 YAML 输出,走 scripts/aggregate_reviews.py
+#      - 把聚合报告作为 PR 评论贴上
+#
+#   2. 适配器 (scripts/run_review_persona.sh):
+#      - 这是一个 **shim**; 默认行为是产出一个 'abstain' 报告,让工作流流程跑通。
+#      - 你可以在 fork 里用环境变量替换成:
+#           - OpenAI Codex CLI  (REVIEW_RUNNER=codex)
+#           - Anthropic Claude  (REVIEW_RUNNER=claude-code)
+#           - Kiro / Cursor / 自研 agent (REVIEW_RUNNER=custom)
+#      - 适配器接到的约定: 参数 persona 文件名、环境变量 DIFF_PATH;
+#        输出 YAML 到 stdout(符合 review-personas/README.md § 3 schema)。
+#
+# 本工作流不强制把 persona verdict 变成 PR 阻塞;
+# 阻塞由 required-status-checks 控制,由仓库 owner 决定。
+#
+# 这条 harness 是为了把"人工调度 persona"变成自动化,节省人类注意力。
+# 登记见 .kiro/steering/DEPRECATION.md。
+# -----------------------------------------------------------------
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review, labeled, unlabeled]
+
+permissions:
+  contents: read
+  pull-requests: write   # 允许贴评论
+
+concurrency:
+  group: review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  # ---------------------------------------------------------------
+  # Stage 1: plan - 选出要跑的 persona
+  # ---------------------------------------------------------------
+  plan:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+      triggered: ${{ steps.plan.outputs.triggered }}
+      skipped: ${{ steps.plan.outputs.skipped }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get changed files
+        id: diff
+        run: |
+          git fetch origin '${{ github.event.pull_request.base.ref }}' --depth=1
+          git diff --name-only "origin/${{ github.event.pull_request.base.ref }}...HEAD" \
+            | tee changed-files.txt
+
+      - name: Compute PR labels
+        id: labels
+        run: |
+          labels=$(jq -r '.[] | .name' <<< '${{ toJson(github.event.pull_request.labels) }}' \
+            | tr '\n' ',' | sed 's/,$//')
+          echo "labels=$labels" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Select personas
+        id: plan
+        run: |
+          python3 scripts/select_personas.py \
+            --diff-files changed-files.txt \
+            --labels '${{ steps.labels.outputs.labels }}' \
+            --pretty > selection.json
+
+          cat selection.json
+
+          triggered=$(jq -c '.triggered' selection.json)
+          skipped=$(jq -c '.skipped' selection.json)
+
+          # 构造 matrix: 每个 persona 一条
+          matrix=$(jq -c '{include: [.triggered[] | {persona: .}]}' selection.json)
+          echo "matrix=$matrix"      >> "$GITHUB_OUTPUT"
+          echo "triggered=$triggered" >> "$GITHUB_OUTPUT"
+          echo "skipped=$skipped"    >> "$GITHUB_OUTPUT"
+
+      - name: Upload selection
+        uses: actions/upload-artifact@v4
+        with:
+          name: persona-selection
+          path: |
+            selection.json
+            changed-files.txt
+
+  # ---------------------------------------------------------------
+  # Stage 2: execute - 每个 persona 一个 job (矩阵并行)
+  # ---------------------------------------------------------------
+  run-personas:
+    needs: plan
+    if: ${{ fromJson(needs.plan.outputs.matrix).include[0] != null }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.plan.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build diff file
+        run: |
+          git fetch origin '${{ github.event.pull_request.base.ref }}' --depth=1
+          git diff "origin/${{ github.event.pull_request.base.ref }}...HEAD" > pr.diff
+
+      - name: Run persona ${{ matrix.persona }}
+        env:
+          # 默认用 'abstain' 适配器,让流水线跑通; fork 可替换
+          REVIEW_RUNNER: ${{ vars.REVIEW_RUNNER || 'abstain' }}
+          REVIEW_MODEL: ${{ vars.REVIEW_MODEL || '' }}
+          DIFF_PATH: pr.diff
+          PERSONA_FILE: templates/review-personas/${{ matrix.persona }}.md
+        run: |
+          bash scripts/run_review_persona.sh "${{ matrix.persona }}" > "review-${{ matrix.persona }}.yaml"
+          echo "::group::${{ matrix.persona }} report"
+          cat "review-${{ matrix.persona }}.yaml"
+          echo "::endgroup::"
+
+      - name: Upload persona report
+        uses: actions/upload-artifact@v4
+        with:
+          name: review-${{ matrix.persona }}
+          path: review-${{ matrix.persona }}.yaml
+
+  # ---------------------------------------------------------------
+  # Stage 3: aggregate + comment
+  # ---------------------------------------------------------------
+  aggregate:
+    needs: [plan, run-personas]
+    if: always() && needs.plan.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install pyyaml
+        run: pip install pyyaml
+
+      - name: Download all persona reports
+        uses: actions/download-artifact@v4
+        with:
+          path: reports
+
+      - name: Aggregate
+        run: |
+          python3 scripts/aggregate_reviews.py \
+            --reports-dir reports \
+            --triggered '${{ needs.plan.outputs.triggered }}' \
+            --skipped   '${{ needs.plan.outputs.skipped }}' \
+            > aggregated.md
+          cat aggregated.md
+
+      - name: Upload aggregated report
+        uses: actions/upload-artifact@v4
+        with:
+          name: aggregated
+          path: aggregated.md
+
+      - name: Comment on PR
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: review-personas
+          path: aggregated.md
