@@ -175,7 +175,34 @@ inclusion: manual
 
 ---
 
-## 7. 维护者
+## 7. Review Persona 自动调度
+
+> 2026-05-09 新增。
+
+本仓库在 `.github/workflows/review.yml` 部署了一个 **persona 自动调度工作流**:
+
+- `scripts/select_personas.py` 根据 PR diff 与 labels,依 `templates/review-personas/README.md § 7` 选出要跑的 persona。
+- `scripts/run_review_persona.sh` 是 **agent 平台适配器**,默认 `REVIEW_RUNNER=abstain`(占位),可在 fork 里切成 `codex` / `claude-code` / `custom`。
+- `scripts/aggregate_reviews.py` 聚合多个 persona 的 YAML 输出,产出一份 markdown 贴到 PR 评论。
+- 工作流**不阻塞** PR;阻塞性由 required status checks 控制。
+
+### 退役条件 / 演化
+
+| 组件 | 当前状态 | 可放宽 | 可收紧 |
+|---|---|---|---|
+| `scripts/select_personas.py` 的规则表 | 与 `templates/review-personas/README.md § 7` **严格同步** | 改文档 → 改脚本(同 PR) | N/A |
+| `abstain` 默认 runner | 允许裸仓库跑通 | 长期保留(为 fork 友好) | 组织内部仓库可改默认 |
+| 聚合评论是 `sticky` | 避免评论风暴 | 长期保留 | N/A |
+| 自动请求 changes | **未启用** | N/A | 若 persona 输出稳定度高(连续 30 天无 false positive >1/wk),可启用 auto request-changes |
+
+### 复审触发
+
+- 每季度:看 PR 作者是否因 persona 噪音而忽略评论;如是 → 削减 persona。
+- 模型大升级后:看是否需要重跑过去 N 个 PR 做校准。
+
+---
+
+## 8. 维护者
 
 - 本台账的 steward:`@repo-owner`(请替换为实际 owner)。
 - Steward 不负责写每一条,但负责:
