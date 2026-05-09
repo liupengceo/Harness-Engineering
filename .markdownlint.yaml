@@ -1,0 +1,36 @@
+# markdownlint 规则配置
+# 设计原则:
+#   - 面向 agent 可读性(与 human 审美无冲突的规则,都保留)
+#   - 不阻碍中英混排的写作习惯
+#   - 放宽"行长"规则;本仓库大量带链接的叙述,逐行强 wrap 反而难 diff
+
+default: true
+
+# 行长:本仓库长链接多,关闭硬门槛,但仍检测"不可断行的句子"
+MD013: false
+
+# MD024: 允许同名 heading(tables/section 重复很常见)
+MD024:
+  siblings_only: true
+
+# MD033: 允许 HTML(ExecPlan / PR 模板使用 <!-- comments -->)
+MD033: false
+
+# MD041: 第一行不必须是 H1(gitkeep 样式的片段无需)
+MD041: false
+
+# MD040: 要求 code fence 带语言,但大量 shell transcript 用 `text` 太啰嗦
+MD040: false
+
+# MD036: 强调不作为 heading —— 允许
+MD036: false
+
+# MD029: ordered list 起始(我们多用 1. ,放宽)
+MD029: false
+
+# MD007: 无序列表缩进(允许 2/4 空格;tree 图用得多)
+MD007: false
+
+# MD012: 多空行(模板里故意隔开,放宽到 2)
+MD012:
+  maximum: 2

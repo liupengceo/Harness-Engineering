@@ -175,7 +175,36 @@ inclusion: manual
 
 ---
 
-## 7. 维护者
+## 7. 机器化守卫 · Pre-commit hooks
+
+> 把可机械化的 steering 做成 hook,是对抗老化的第一线——hook 在模型进化前后**一致生效**,不会被新 agent 的"新解读"拐走。
+
+当前本仓库安装的 hooks(定义在 `.pre-commit-config.yaml`):
+
+| hook | 出处 steering | 严重性 |
+|---|---|---|
+| `trailing-whitespace` / `end-of-file-fixer` / `mixed-line-ending` | `code-style.md` | 非致命(自动修) |
+| `check-merge-conflict` | `git-workflow.md § 7` | 致命 |
+| `check-added-large-files` (>512KB) | `code-style.md § 6 依赖管理` | 致命 |
+| `detect-private-key` / `gitleaks` | `security.md § 5 密钥管理` | 致命 |
+| `no-commit-to-branch main/master` | `git-workflow.md § 1` | 致命 |
+| `markdownlint` | `docs.md` | 致命 |
+| `yamllint` | `code-style.md` / `docs.md` | 致命 |
+| `shellcheck` | `code-style.md` / `security.md § 3` | 致命 |
+| `harness-steering-format` | `.kiro/steering/README.md` | 致命 |
+| `harness-todo-format` | `code-style.md § 8` | 致命 |
+| `harness-commit-msg` | `git-workflow.md § 2` | 致命 |
+| `harness-deprecation-link` | `harness.md R3` + 本文件 | **advisory** |
+
+**放宽的原因记录**:
+
+- `MD013`(行长)在 `.markdownlint.yaml` 被关闭——本仓库长链接大量出现,硬 wrap 反而损害 diff 可读性。将来若有工具能智能 wrap,可回开。
+- `detect-secrets` 未启用,由 gitleaks 覆盖(单一密钥扫描工具,减少噪音)。
+- `harness-deprecation-link` 为 advisory 而非 blocking——打字错误修复会被误伤。若社区忘写频繁,可升级为 blocking + 在本文件新登记一条"已收紧"。
+
+---
+
+## 8. 维护者
 
 - 本台账的 steward:`@repo-owner`(请替换为实际 owner)。
 - Steward 不负责写每一条,但负责:
