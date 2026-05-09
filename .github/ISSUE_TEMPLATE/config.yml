@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Discussion / idea
+    url: https://github.com/liupengceo/kiro.dev/discussions
+    about: 想法、讨论、问"可以这样做吗"—— 不要建 issue,来 Discussions。
+  - name: Harness Engineering 精读
+    url: ./docs/harness-engineering/README.md
+    about: 先读精读库,再决定起 issue 的类型。
