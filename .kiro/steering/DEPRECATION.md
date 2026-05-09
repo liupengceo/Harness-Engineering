@@ -200,9 +200,32 @@ inclusion: manual
 - 每季度:看 PR 作者是否因 persona 噪音而忽略评论;如是 → 削减 persona。
 - 模型大升级后:看是否需要重跑过去 N 个 PR 做校准。
 
+### FU-2 变更记录(2026-05-09)
+
+| 项目 | 从 | 到 | 退役条件 |
+|---|---|---|---|
+| `REVIEW_RUNNER=abstain` 的默认 verdict | `approve`(误导) | `abstain`(语义独立) | 永久保留;这是对"bot 绿 = 万事大吉"的根本纠正 |
+| `abstain` 在 rollup 中的行为 | (不存在) | **跳过**;全 abstain 时顶层 verdict = `abstain` | 永久 |
+| aggregate 顶部的 abstain 横幅 | (不存在) | 全 abstain 时强横幅;部分 abstain 时软横幅 | 永久 |
+| `scripts/validate_persona_output.py` | (不存在) | 强制 raw YAML / 必需字段 / verdict enum | 长期;当所有 adapter 稳定产出合规 YAML 超过 90 天,可考虑降级为 warning |
+
+**为何永久**:这些改动不是对抗某个模型版本的缺陷,而是对"评审 bot 语义"的一个根本性澄清。不在 model-upgrade 后退役。
+
 ---
 
-## 8. 维护者
+## 8. Bootstrap 异常(Retired)
+
+> 2026-05-09 登记。**状态:Retired — 已追认,仅留历史**。
+>
+> PR #1–#4 建立了 AGENTS.md / steering / templates / ADR-0001 本身。在它们合入之前,"任何触及代码的任务必须先出 ExecPlan" 并不可能被满足(ExecPlan 的模板在 #1 里才首次出现)。这是 bootstrap 阶段的鸡生蛋,属于 `AGENTS.md § 3.1` 与 `.kiro/steering/harness.md § 2 R1` 的**一次性例外**。
+>
+> 从本 session(#5 meta PR)起,所有 PR 必须遵守 ExecPlan 先行规则。未来**不得**再以 bootstrap 为由豁免。
+>
+> 留此条目是为了避免未来的人在历史里"发现"这 4 个 PR 没 ExecPlan 而误以为"规矩本来就可以绕"。
+
+---
+
+## 9. 维护者
 
 - 本台账的 steward:`@repo-owner`(请替换为实际 owner)。
 - Steward 不负责写每一条,但负责:

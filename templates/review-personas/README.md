@@ -39,7 +39,7 @@ $ codex review --persona=security < diff.patch
 
 ```yaml
 persona: "security"              # persona 名
-verdict: "approve"               # one of: approve | approve-with-changes | request-changes | block
+verdict: "approve"               # see enum below
 summary: "一句话结论"
 findings:
   - id: "SEC-001"
@@ -57,6 +57,30 @@ escalate_to_human:
   reason: ""
 ```
 
+### 3.1 `verdict` 枚举
+
+| verdict | 含义 | rollup 中的行为 |
+|---|---|---|
+| **`abstain`** | **该 persona 未实际评审(runner 未接入 / 工具缺失 / diff 不适用)**。该 persona 的"意见"不应被用来作 approve/block 的依据。 | **rollup 中跳过**。若全部 persona 都 abstain,顶层 verdict = `abstain`。 |
+| `approve` | 实际看过,无阻断问题 | 参与 rollup |
+| `approve-with-changes` | 可以合入,但请先做 medium/low 建议 | 参与 rollup |
+| `request-changes` | 必须修再重新评审 | 参与 rollup |
+| `block` | 触红线 / 数据损坏 / 安全事故,必须人工介入 | 参与 rollup;**任一 `block` 让顶层 `block`** |
+
+**关键规则**:`abstain` 与 `approve` **不同**。`approve` 意味着"有一个真实 reviewer 看过并放行",`abstain` 意味着"没有人看过"。**不得**把 `abstain` 当作 `approve` 来统计,**不得**把 abstain 的 persona 计入"审过了"。
+
+### 3.2 输出契约(adapter 必守)
+
+adapter(`scripts/run_review_persona.sh` 的 `codex` / `claude-code` / `custom` 分支)产出 YAML 到 stdout 时:
+
+- **必须**是 **raw YAML**(纯 `key: value` 文本)。
+- **不得**被 Markdown 代码围栏(```yaml ... ```)包裹。
+- **不得**在 YAML 前后输出任何自然语言前言 / 解释 / 状态行。
+- **必须**包含全部必填字段:`persona` / `verdict` / `summary` / `findings` / `followups` / `escalate_to_human`。
+- `findings` 可为空数组 `[]`,但**键必须存在**。
+
+本仓库提供 `scripts/validate_persona_output.py` 做机械检查。`run_review_persona.sh` 每条分支的输出都会经过它;不合格的输出 exit 3 并被 CI 标红。若 runner 因模型随意添加 fence / 前言,请在 adapter 里剥掉。
+
 ## 4. 严重性阶梯(persona 通用)
 
 | severity | 含义 | 默认行为 |
@@ -66,6 +90,8 @@ escalate_to_human:
 | **medium** | 强烈建议修 | `approve-with-changes` |
 | **low** | 打磨;可在后续 PR 修 | `approve` + followup |
 | **info** | 观察记录,不影响合入 | `approve` |
+
+**注**:`abstain` 不是一个 severity,它是 persona 级别的 verdict。当某个 persona abstain 时,它**不应**产出 findings(因为根本没看)。
 
 ## 5. Persona 的硬规矩
 
