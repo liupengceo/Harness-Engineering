@@ -1,0 +1,102 @@
+name: require-execplan
+
+# -----------------------------------------------------------------
+# Enforces AGENTS.md § 3.1: PRs that touch production code must
+# present an ExecPlan. Implementation: scripts/check_pr_has_execplan.py
+#
+# Behavior:
+#   - Runs on every PR event that could change the outcome.
+#   - Posts a sticky comment with the gate summary.
+#   - Fails the status check (exit 1) when the rule is violated.
+#   - Does NOT auto-block merges; that's branch-protection's call.
+#
+# Tuning:
+#   Policy constants (code extensions, exempt types, typo threshold)
+#   live in the Python script, NOT here. Edit there + write a harness
+#   ExecPlan if you want to change the rule itself.
+# -----------------------------------------------------------------
+
+on:
+  pull_request:
+    types: [opened, synchronize, edited, reopened, labeled, unlabeled, ready_for_review]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: require-execplan-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Gather changed files
+        id: files
+        run: |
+          git fetch origin "${{ github.event.pull_request.base.ref }}" --depth=1
+          git diff --name-only \
+            "origin/${{ github.event.pull_request.base.ref }}...HEAD" \
+            > changed-files.txt
+          echo "---"
+          cat changed-files.txt
+          echo "---"
+
+          # Approximate LOC touched (insertions only; fine for typo gate)
+          loc=$(git diff --numstat \
+            "origin/${{ github.event.pull_request.base.ref }}...HEAD" \
+            | awk '{ sum += $1 } END { print (sum == "" ? 0 : sum) }')
+          echo "loc=$loc" >> "$GITHUB_OUTPUT"
+          echo "approx LOC = $loc"
+
+      - name: Save PR body + title + labels
+        id: pr
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          printf '%s' "$PR_BODY"  > pr-body.md
+          printf '%s' "$PR_TITLE" > pr-title.txt
+          labels=$(jq -r '.[] | .name' \
+            <<< '${{ toJson(github.event.pull_request.labels) }}' \
+            | tr '\n' ',' | sed 's/,$//')
+          echo "labels=$labels" >> "$GITHUB_OUTPUT"
+
+      - name: Run gate
+        id: gate
+        continue-on-error: true
+        run: |
+          python3 scripts/check_pr_has_execplan.py \
+            --changed-files changed-files.txt \
+            --pr-body pr-body.md \
+            --pr-title "$(cat pr-title.txt)" \
+            --pr-labels '${{ steps.pr.outputs.labels }}' \
+            --approx-loc ${{ steps.files.outputs.loc }} \
+            --out gate.md
+          # continue-on-error so we can comment before failing
+          echo "rc=$?" >> "$GITHUB_OUTPUT"
+
+      - name: Comment on PR
+        if: always()
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: require-execplan
+          path: gate.md
+
+      - name: Fail if gate failed
+        if: steps.gate.outputs.rc != '0'
+        run: |
+          echo "ExecPlan gate reported failure (rc=${{ steps.gate.outputs.rc }})"
+          exit 1
