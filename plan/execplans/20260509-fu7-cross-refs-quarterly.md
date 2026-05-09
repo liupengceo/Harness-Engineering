@@ -10,7 +10,7 @@
 
 两条机械化守卫合一个 PR(它们都属于"对 harness 老化的被动防线"):
 
-**A. Cross-reference check**(P1 #6):扫 repo 内所有 markdown 里形如 `AGENTS.md § 3.1`、`.kiro/steering/foo.md § 5` 的引用,确认目标 **section anchor 真的存在**。预防重命名 section 时旧引用悄悄失效,让 agent 读到"指向虚空的规则"。
+**A. Cross-reference check**(P1 #6):扫 repo 内所有 markdown 里形如 `AGENTS.md` § 3.1、`.kiro/steering/<name>.md` § 5 的引用,确认目标 **section anchor 真的存在**。预防重命名 section 时旧引用悄悄失效,让 agent 读到"指向虚空的规则"。
 
 **B. Quarterly harness review automation**(P1 #9):每季度自动在仓库开一个 issue,附当前 `DEPRECATION.md` 的 Active 条目清单,催促人类 review。防止 DEPRECATION 台账自己老化。
 
@@ -39,7 +39,6 @@
 ### 5.A Cross-refs
 
 - 扫 markdown 文件。
-- 正则匹配形如:
   - `` `some/file.md` § N `` / `` `some/file.md` § N.M ``
   - `some/file.md § N` (in body text)
   - `AGENTS.md § N` / `AGENTS.md § N.M`

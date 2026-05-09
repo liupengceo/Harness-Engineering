@@ -1,0 +1,49 @@
+name: cross-refs
+
+# -----------------------------------------------------------------
+# Validates that every internal markdown cross-reference of the
+# form `path/to/file.md § N` points at a file that exists AND a
+# section that exists inside it.
+#
+# Why:
+#   Our steering / AGENTS.md / personas lean heavily on "see X § N"
+#   references. Silent rot is the failure mode we want to catch.
+#
+# Scope:
+#   Only *internal* references. External URLs are out of scope --
+#   see the link-check job (P1 #7 backlog) for that.
+#
+# Behavior:
+#   Fails the job if any reference is broken. Once this merges
+#   alongside PR #2, it can be folded into the lint.yml workflow.
+# -----------------------------------------------------------------
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cross-refs-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Scan markdown cross-references
+        run: |
+          python3 scripts/check_cross_refs.py
