@@ -1,0 +1,124 @@
+# Pre-commit hooks for this repo
+# ---------------------------------------------------------------------
+# 安装:  pip install pre-commit  &&  pre-commit install
+# 手动跑:pre-commit run -a
+#
+# 这里的每一条都回答一个问题: "这条 hook 对抗的是 steering 里的哪条约定?"
+# 如果你不想要某条,请去 .kiro/steering/DEPRECATION.md 登记"已放宽"原因。
+
+minimum_pre_commit_version: "3.5.0"
+
+default_language_version:
+  python: python3
+
+# 失败时不要假装成功:CI 也必须跑同一套。
+fail_fast: false
+
+repos:
+  # ---------------------------------------------------------------
+  # 1. 通用卫生 (trailing whitespace, EOF, 大文件, merge conflict, …)
+  #    来源: .kiro/steering/code-style.md  .kiro/steering/git-workflow.md
+  # ---------------------------------------------------------------
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+        args: ["--fix=lf"]
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        args: ["--maxkb=512"]
+      - id: check-case-conflict
+      - id: check-symlinks
+      - id: check-executables-have-shebangs
+      - id: check-shebang-scripts-are-executable
+      - id: check-yaml
+        args: ["--unsafe"]     # 允许 !!tag:docker
+      - id: check-json
+      - id: check-toml
+      - id: check-vcs-permalinks
+      # 防止把 secret 塞进 commit message(简单启发式,见 gitleaks 做深度扫描)
+      - id: detect-private-key
+      - id: no-commit-to-branch
+        args: ["--branch", "main", "--branch", "master"]
+
+  # ---------------------------------------------------------------
+  # 2. Secret 扫描 (gitleaks)
+  #    来源: .kiro/steering/security.md § 1  § 5
+  # ---------------------------------------------------------------
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.18.4
+    hooks:
+      - id: gitleaks
+        # 只在本次改动上扫(快);CI 里会做 full history 扫
+        name: gitleaks (staged)
+
+  # ---------------------------------------------------------------
+  # 3. Markdown lint (文档占本仓库一等公民)
+  #    来源: .kiro/steering/docs.md  .kiro/steering/code-style.md
+  # ---------------------------------------------------------------
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.41.0
+    hooks:
+      - id: markdownlint
+        args: ["--config", ".markdownlint.yaml"]
+        # 跳过由外部工具原样同步的路径
+        exclude: |
+          (?x)^(
+            .*\.github/workflows/.*\.md|
+            CHANGELOG\.md
+          )$
+
+  # ---------------------------------------------------------------
+  # 4. YAML / workflow lint
+  # ---------------------------------------------------------------
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.35.1
+    hooks:
+      - id: yamllint
+        args: ["-c", ".yamllint.yaml"]
+
+  # ---------------------------------------------------------------
+  # 5. Shell lint
+  # ---------------------------------------------------------------
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.10.0.1
+    hooks:
+      - id: shellcheck
+
+  # ---------------------------------------------------------------
+  # 6. 本仓库自定义的 harness 守卫
+  #    来源: .kiro/steering/harness.md    AGENTS.md  .kiro/steering/README.md
+  #    位于 scripts/ 下;仓库本地 hook,不从外部拉。
+  # ---------------------------------------------------------------
+  - repo: local
+    hooks:
+      - id: harness-steering-format
+        name: steering 格式自检 (headers + inclusion 字段)
+        entry: scripts/check_steering_headers.py
+        language: python
+        additional_dependencies: ["pyyaml>=6.0"]
+        files: ^\.kiro/steering/.*\.md$
+        pass_filenames: true
+
+      - id: harness-todo-format
+        name: TODO/FIXME/HACK 必须写明负责人 + 截止条件
+        entry: scripts/check_todo_format.py
+        language: python
+        types_or: [python, javascript, typescript, tsx, jsx, go, rust, ruby, java, kotlin, swift, c, c++, shell]
+        pass_filenames: true
+
+      - id: harness-commit-msg
+        name: Conventional-ish commit subject (type(scope): subject)
+        entry: scripts/check_commit_msg.py
+        language: python
+        stages: [commit-msg]
+
+      - id: harness-deprecation-link
+        name: 改了 steering 必须同步 DEPRECATION.md
+        entry: scripts/check_deprecation_link.py
+        language: python
+        pass_filenames: false
+        # 这条 hook 只在 "有 steering 变化" 时真正做事(脚本内部判断)
+        always_run: true

@@ -85,6 +85,25 @@
 5. Persona + CI 全绿 → 人类做 acceptance checkpoint。
 6. 合入 → 如果是长任务,同步 `plan/PROGRESS.md` + 写 `plan/HANDOFF.md`。
 
+## 本地开发者配置
+
+一次性初始化:
+
+```bash
+pip install pre-commit pyyaml
+pre-commit install                # pre-commit hooks
+pre-commit install --hook-type commit-msg   # commit subject 守卫
+```
+
+常用:
+
+```bash
+pre-commit run --all-files        # 本地全量跑一遍
+pre-commit autoupdate             # 更新 hook 版本
+```
+
+CI 上 `.github/workflows/lint.yml` 会跑**同一套** hooks,所以"本地过 = CI 过"。
+
 ## 本仓库的硬规定(摘录)
 
 - **没 ExecPlan 的 PR,一律不合。**

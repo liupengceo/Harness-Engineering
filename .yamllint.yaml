@@ -1,0 +1,20 @@
+extends: default
+
+rules:
+  # GitHub Actions 常见的"on:"是 YAML truthy (yes/no/on/off)
+  truthy:
+    check-keys: false
+
+  # 行长放宽到 200(工作流 url / gitleaks 版本号很长)
+  line-length:
+    max: 200
+    level: warning
+
+  # 文档内 YAML 片段经常用 # TODO,放宽
+  comments:
+    min-spaces-from-content: 1
+
+  # 允许缩进 2 或 4
+  indentation:
+    spaces: consistent
+    indent-sequences: consistent
