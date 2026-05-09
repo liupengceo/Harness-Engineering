@@ -97,10 +97,14 @@
 **没跑通就先别开 PR。**
 
 ### 3.4 提交时必须做的事
-- 使用 `/.github/pull_request_template.md` 的格式。
-- PR 的第一个 commit 必须包含 `ExecPlan`。
+- **选对 PR 模板**(FU-4 改动起生效):
+  - 默认 `?` → short 版(fix / docs / chore / 小改)
+  - `?template=standard.md` → 新功能 / 行为变更 / 跨模块接口变化
+  - `?template=harness_change.md` → 改 AGENTS.md / steering / templates / scripts / workflows / 工具注册表
+  - **选错模板 = 重开 PR**(不要硬填)
+- PR 的第一个 commit 必须包含 `ExecPlan`(short 版 PR 可以在 commit body 写 micro-plan,但 standard/harness-change **必须**有文件级 ExecPlan)。
 - 在 PR 里**显式列出对 AGENTS.md / steering / 工具注册表 的改动**,如果有。
-- 如果这次改动是因为某次错误反思而做的 harness 改动,标注 `harness-change` 标签。
+- 如果这次改动是因为某次错误反思而做的 harness 改动,标注 `harness-change` 标签 + 用 harness_change 模板。
 
 ### 3.5 合入后必须做的事(长任务)
 - 更新 `plan/PROGRESS.md`。
