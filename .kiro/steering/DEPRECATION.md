@@ -175,7 +175,39 @@ inclusion: manual
 
 ---
 
-## 7. 维护者
+## 7. ExecPlan gate(require-execplan workflow · 2026-05-09)
+
+机械化执行 `AGENTS.md § 3.1` 的 "任何触及代码的任务必须先出 ExecPlan"。
+
+### 实现
+
+- Workflow:`.github/workflows/require-execplan.yml`
+- Script:`scripts/check_pr_has_execplan.py`
+- 行为:失败不自动 block,但发一条 sticky PR 评论指出如何补救;由 branch-protection 决定是否强制。
+
+### Exemption 政策(Policy constants lives in the Python script)
+
+| Exemption | 理由 |
+|---|---|
+| `docs` / `chore` / `ci` / `build` / `style` / `revert` 类型 | 这些类型通常不需要结构化 plan |
+| 带 `docs` / `chore` / `ci` / `typo` / `trivial` label | 显式豁免入口 |
+| Diff ≤ 10 LOC | typo / log-level 修复不值得 ExecPlan 开销 |
+| 只动 `plan/` `docs/` `.github/` `.kiro/` `templates/` `scripts/` `tests/` | 它们走其他 gate(harness-change PR 模板) |
+
+### 退役条件
+
+| 信号 | 行动 |
+|---|---|
+| 连续 1 个季度的 PR gate **pass 率 = 100%** | 不退役,但考虑降低阈值(如 LOC)验证规则还有效 |
+| 出现"正当的触代码 PR 被误 flag" > 3 次 | 调规则,写 harness-change PR 明确改动 |
+| 开始真正有生产代码目录(目前 `src/` 等不存在) | gate 自动生效,无需代码改 |
+| 若 starter kit 有人 fork 并汇报"我被这条卡住了一个合理 PR" | 讨论是否需要新 exemption |
+
+**本条预期长期保留** —— 它是对 AGENTS.md § 3.1 的机械化,不是对抗模型缺陷。
+
+---
+
+## 8. 维护者
 
 - 本台账的 steward:`@repo-owner`(请替换为实际 owner)。
 - Steward 不负责写每一条,但负责:
