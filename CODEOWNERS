@@ -1,0 +1,42 @@
+# CODEOWNERS for kiro.dev
+# ---------------------------------------------------------------
+# GitHub-native enforcement of the "harness changes require
+# steward approval" policy described in:
+#   - AGENTS.md § 2 "人的四个 checkpoint" -> "Harness change"
+#   - .kiro/steering/DEPRECATION.md § 1 "新增一条"
+#   - templates/review-personas/harness-steward.md
+#
+# Paths without an entry are unowned (anyone with write access to
+# the repo can approve them). That is intentional: we only gate
+# the harness surface, not every file.
+# ---------------------------------------------------------------
+
+# The harness surface --------------------------------------------
+AGENTS.md                               @liupengceo
+/.kiro/                                 @liupengceo
+/.kiro/steering/                        @liupengceo
+/.kiro/steering/DEPRECATION.md          @liupengceo
+/.kiro/steering/security.md             @liupengceo
+
+# Templates the whole workflow depends on ------------------------
+/templates/                             @liupengceo
+/templates/ExecPlan.md                  @liupengceo
+/templates/review-personas/             @liupengceo
+
+# CI / pre-commit / scripts --------------------------------------
+/.github/                               @liupengceo
+/.github/workflows/                     @liupengceo
+/.pre-commit-config.yaml                @liupengceo
+/scripts/                               @liupengceo
+
+# ADR: architectural decisions are long-lived commitments --------
+/docs/adr/                              @liupengceo
+
+# The deep-read library is normative reference material ----------
+/docs/harness-engineering/              @liupengceo
+
+# License / legal / security policy ------------------------------
+/LICENSE                                @liupengceo
+/SECURITY.md                            @liupengceo
+/CODE_OF_CONDUCT.md                     @liupengceo
+/CODEOWNERS                             @liupengceo
