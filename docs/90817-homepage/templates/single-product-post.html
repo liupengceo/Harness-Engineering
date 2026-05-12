@@ -1,0 +1,282 @@
+<!-- ============================================
+    SINGLE PRODUCT POST TEMPLATE
+    90817.com — HB Power Tower Co., Ltd.
+    
+    USE THIS FOR: Individual tower product articles within each category.
+    Example: "132kV Double Circuit Suspension Tower" under Transmission Towers
+    
+    HOW TO USE:
+    1. Go to Posts → Add New
+    2. Set the correct Category (e.g. Transmission Towers)
+    3. Click ⋮ → Code editor
+    4. Paste this template and replace all [PLACEHOLDERS]
+    5. Exit code editor → Update
+    6. Set Featured Image (used in category listing grid)
+    
+    REPLACE PLACEHOLDERS:
+    - [PRODUCT_NAME] → e.g. "132kV Double Circuit Suspension Tower"
+    - [PRODUCT_IMAGE_1/2/3] → product photos
+    - [SHORT_DESCRIPTION] → 1-2 sentence summary
+    - [TOWER_TYPE] → e.g. "Lattice Angle Steel Tower"
+    - [VOLTAGE] → e.g. "132kV"
+    - [HEIGHT_RANGE] → e.g. "24m – 42m"
+    - [WEIGHT_RANGE] → e.g. "3.5 – 8 tons/set"
+    - [CONDUCTOR] → e.g. "2×ACSR 400/50"
+    - [WIND_SPEED] → e.g. "150 km/h (Basic Wind Speed)"
+    - [DESIGN_STANDARD] → e.g. "IEC 60826 / BS 8100"
+    
+    SEO TIPS:
+    - Post Title = [PRODUCT_NAME] + "| HB Power Tower"
+    - Slug: use dashes, e.g. "132kv-double-circuit-suspension-tower"
+    - Meta Description: include voltage, tower type, manufacturer name
+    - Add 3-5 Tags: voltage class, tower subtype, application
+============================================ -->
+
+<!-- SECTION 1: Product Header -->
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"50px","bottom":"50px","left":"30px","right":"30px"}},"color":{"background":"#f7fafc"}},"layout":{"type":"constrained","contentSize":"1100px"}} -->
+<div class="wp-block-group alignfull has-background" style="background-color:#f7fafc;padding-top:50px;padding-right:30px;padding-bottom:50px;padding-left:30px">
+
+<!-- wp:columns {"style":{"spacing":{"blockGap":{"left":"50px"}}}} -->
+<div class="wp-block-columns">
+
+<!-- wp:column {"width":"55%"} -->
+<div class="wp-block-column" style="flex-basis:55%">
+
+<!-- wp:image {"sizeSlug":"large","linkDestination":"none","style":{"border":{"radius":"8px"}}} -->
+<figure class="wp-block-image size-large" style="border-radius:8px"><img src="[PRODUCT_IMAGE_1]" alt="[PRODUCT_NAME]"/></figure>
+<!-- /wp:image -->
+
+<!-- wp:columns {"style":{"spacing":{"blockGap":{"left":"12px"},"margin":{"top":"12px"}}}} -->
+<div class="wp-block-columns" style="margin-top:12px">
+<!-- wp:column -->
+<div class="wp-block-column">
+<!-- wp:image {"sizeSlug":"medium","style":{"border":{"radius":"6px"}}} -->
+<figure class="wp-block-image size-medium" style="border-radius:6px"><img src="[PRODUCT_IMAGE_2]" alt="[PRODUCT_NAME] detail view"/></figure>
+<!-- /wp:image -->
+</div>
+<!-- /wp:column -->
+<!-- wp:column -->
+<div class="wp-block-column">
+<!-- wp:image {"sizeSlug":"medium","style":{"border":{"radius":"6px"}}} -->
+<figure class="wp-block-image size-medium" style="border-radius:6px"><img src="[PRODUCT_IMAGE_3]" alt="[PRODUCT_NAME] installation"/></figure>
+<!-- /wp:image -->
+</div>
+<!-- /wp:column -->
+</div>
+<!-- /wp:columns -->
+
+</div>
+<!-- /wp:column -->
+
+<!-- wp:column {"width":"45%"} -->
+<div class="wp-block-column" style="flex-basis:45%">
+
+<!-- wp:paragraph {"style":{"typography":{"fontSize":"13px","fontStyle":"normal","fontWeight":"600","textTransform":"uppercase","letterSpacing":"1px"},"elements":{"link":{"color":{"text":"var:preset|color|vivid-cyan-blue"}}}},"textColor":"vivid-cyan-blue"} -->
+<p class="has-vivid-cyan-blue-color has-text-color has-link-color" style="font-size:13px;font-style:normal;font-weight:600;letter-spacing:1px;text-transform:uppercase">[TOWER_TYPE]</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":1,"style":{"typography":{"fontSize":"32px","fontStyle":"normal","fontWeight":"700","lineHeight":"1.3"},"spacing":{"margin":{"top":"8px","bottom":"16px"}}}} -->
+<h1 class="wp-block-heading" style="font-size:32px;font-style:normal;font-weight:700;line-height:1.3;margin-top:8px;margin-bottom:16px">[PRODUCT_NAME]</h1>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph {"style":{"typography":{"fontSize":"16px","lineHeight":"1.7"},"spacing":{"margin":{"bottom":"24px"}}}} -->
+<p style="font-size:16px;line-height:1.7;margin-bottom:24px">[SHORT_DESCRIPTION]</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:html -->
+<table style="width:100%;font-size:14px;border-collapse:collapse;margin-bottom:24px;">
+  <tr style="border-bottom:1px solid #e2e8f0;">
+    <td style="padding:10px 0;font-weight:600;width:40%;color:#2D3748;">Tower Type</td>
+    <td style="padding:10px 0;color:#4A5568;">[TOWER_TYPE]</td>
+  </tr>
+  <tr style="border-bottom:1px solid #e2e8f0;">
+    <td style="padding:10px 0;font-weight:600;color:#2D3748;">Voltage Class</td>
+    <td style="padding:10px 0;color:#4A5568;">[VOLTAGE]</td>
+  </tr>
+  <tr style="border-bottom:1px solid #e2e8f0;">
+    <td style="padding:10px 0;font-weight:600;color:#2D3748;">Height Range</td>
+    <td style="padding:10px 0;color:#4A5568;">[HEIGHT_RANGE]</td>
+  </tr>
+  <tr style="border-bottom:1px solid #e2e8f0;">
+    <td style="padding:10px 0;font-weight:600;color:#2D3748;">Weight</td>
+    <td style="padding:10px 0;color:#4A5568;">[WEIGHT_RANGE]</td>
+  </tr>
+  <tr style="border-bottom:1px solid #e2e8f0;">
+    <td style="padding:10px 0;font-weight:600;color:#2D3748;">Conductor</td>
+    <td style="padding:10px 0;color:#4A5568;">[CONDUCTOR]</td>
+  </tr>
+  <tr style="border-bottom:1px solid #e2e8f0;">
+    <td style="padding:10px 0;font-weight:600;color:#2D3748;">Design Wind Speed</td>
+    <td style="padding:10px 0;color:#4A5568;">[WIND_SPEED]</td>
+  </tr>
+  <tr style="border-bottom:1px solid #e2e8f0;">
+    <td style="padding:10px 0;font-weight:600;color:#2D3748;">Material</td>
+    <td style="padding:10px 0;color:#4A5568;">Q235B / Q345B / Q420B</td>
+  </tr>
+  <tr style="border-bottom:1px solid #e2e8f0;">
+    <td style="padding:10px 0;font-weight:600;color:#2D3748;">Surface Treatment</td>
+    <td style="padding:10px 0;color:#4A5568;">Hot-dip galvanized (ISO 1461)</td>
+  </tr>
+  <tr>
+    <td style="padding:10px 0;font-weight:600;color:#2D3748;">Design Standard</td>
+    <td style="padding:10px 0;color:#4A5568;">[DESIGN_STANDARD]</td>
+  </tr>
+</table>
+<!-- /wp:html -->
+
+<!-- wp:buttons {"layout":{"type":"flex","justifyContent":"left"},"style":{"spacing":{"blockGap":"12px"}}} -->
+<div class="wp-block-buttons">
+<!-- wp:button {"backgroundColor":"vivid-cyan-blue","style":{"typography":{"fontSize":"14px","fontStyle":"normal","fontWeight":"700"},"border":{"radius":"4px"},"spacing":{"padding":{"top":"14px","bottom":"14px","left":"24px","right":"24px"}}}} -->
+<div class="wp-block-button has-custom-font-size" style="font-size:14px;font-style:normal;font-weight:700"><a class="wp-block-button__link has-vivid-cyan-blue-background-color has-background wp-element-button" href="/contact-us/" style="border-radius:4px;padding-top:14px;padding-right:24px;padding-bottom:14px;padding-left:24px">REQUEST QUOTE</a></div>
+<!-- /wp:button -->
+<!-- wp:button {"className":"is-style-outline","style":{"typography":{"fontSize":"14px","fontStyle":"normal","fontWeight":"600"},"border":{"radius":"4px"},"spacing":{"padding":{"top":"14px","bottom":"14px","left":"24px","right":"24px"}}}} -->
+<div class="wp-block-button has-custom-font-size is-style-outline" style="font-size:14px;font-style:normal;font-weight:600"><a class="wp-block-button__link wp-element-button" href="https://wa.me/86XXXXXXXXXXX" style="border-radius:4px;padding-top:14px;padding-right:24px;padding-bottom:14px;padding-left:24px">WHATSAPP</a></div>
+<!-- /wp:button -->
+</div>
+<!-- /wp:buttons -->
+
+</div>
+<!-- /wp:column -->
+
+</div>
+<!-- /wp:columns -->
+
+</div>
+<!-- /wp:group -->
+
+
+<!-- SECTION 2: Detailed Description -->
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"60px","bottom":"60px","left":"30px","right":"30px"}}},"backgroundColor":"white","layout":{"type":"constrained","contentSize":"900px"}} -->
+<div class="wp-block-group alignfull has-white-background-color has-background" style="padding-top:60px;padding-right:30px;padding-bottom:60px;padding-left:30px">
+
+<!-- wp:heading {"style":{"typography":{"fontSize":"26px","fontStyle":"normal","fontWeight":"700"},"spacing":{"margin":{"bottom":"20px"}}}} -->
+<h2 class="wp-block-heading" style="font-size:26px;font-style:normal;font-weight:700;margin-bottom:20px">Product Description</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph {"style":{"typography":{"fontSize":"16px","lineHeight":"1.8"}}} -->
+<p style="font-size:16px;line-height:1.8">The [PRODUCT_NAME] is designed for [APPLICATION DESCRIPTION — e.g. "high-voltage power transmission over medium to long distances"]. This tower type features [KEY DESIGN FEATURE — e.g. "a self-supporting four-legged lattice structure using bolted angle steel connections"].</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"style":{"typography":{"fontSize":"16px","lineHeight":"1.8"}}} -->
+<p style="font-size:16px;line-height:1.8">Manufactured at our 200,000m² facility in Hengshui, China, each tower is fabricated using CNC angle processing lines and hot-dip galvanized in our in-house galvanizing plant (12m+ kettle). All towers undergo trial assembly and dimensional verification before shipping.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":3,"style":{"typography":{"fontSize":"20px","fontStyle":"normal","fontWeight":"700"},"spacing":{"margin":{"top":"36px","bottom":"12px"}}}} -->
+<h3 class="wp-block-heading" style="font-size:20px;font-style:normal;font-weight:700;margin-top:36px;margin-bottom:12px">Design Features</h3>
+<!-- /wp:heading -->
+
+<!-- wp:list {"style":{"typography":{"fontSize":"15px","lineHeight":"2"}}} -->
+<ul style="font-size:15px;line-height:2"><li>Optimized structural design using PLS-Tower / SAP2000</li><li>Minimum zinc coating thickness: 86 μm (members &gt;6mm), 100+ μm available</li><li>All bolts and nuts: Grade 8.8 / 10.9 high-strength, galvanized</li><li>Foundation options: stub angle, base plate, or anchor bolt</li><li>Conductor attachment: suspension clamp / strain clamp per project spec</li><li>Marking system: tower ID, member marks, erection sequence per drawing</li></ul>
+<!-- /wp:list -->
+
+<!-- wp:heading {"level":3,"style":{"typography":{"fontSize":"20px","fontStyle":"normal","fontWeight":"700"},"spacing":{"margin":{"top":"36px","bottom":"12px"}}}} -->
+<h3 class="wp-block-heading" style="font-size:20px;font-style:normal;font-weight:700;margin-top:36px;margin-bottom:12px">Applications</h3>
+<!-- /wp:heading -->
+
+<!-- wp:list {"style":{"typography":{"fontSize":"15px","lineHeight":"2"}}} -->
+<ul style="font-size:15px;line-height:2"><li>Power transmission lines ([VOLTAGE] class)</li><li>Suitable for flat terrain, hilly terrain, or river crossing</li><li>Single circuit or double circuit configurations</li><li>Applicable for tangent, small angle, and line deviation up to 3°</li></ul>
+<!-- /wp:list -->
+
+<!-- wp:heading {"level":3,"style":{"typography":{"fontSize":"20px","fontStyle":"normal","fontWeight":"700"},"spacing":{"margin":{"top":"36px","bottom":"12px"}}}} -->
+<h3 class="wp-block-heading" style="font-size:20px;font-style:normal;font-weight:700;margin-top:36px;margin-bottom:12px">Quality Assurance</h3>
+<!-- /wp:heading -->
+
+<!-- wp:list {"style":{"typography":{"fontSize":"15px","lineHeight":"2"}}} -->
+<ul style="font-size:15px;line-height:2"><li>Material: mill certificates verified, chemical &amp; mechanical testing</li><li>Fabrication: CNC processing, tolerance per GB/T 2694 or project spec</li><li>Galvanizing: ISO 1461 / ASTM A123, coating weight &amp; adhesion tested</li><li>Inspection: in-house QC + optional third-party (SGS / BV / TÜV)</li><li>Packing: bundled, tagged, sea-worthy packaging for container or breakbulk</li></ul>
+<!-- /wp:list -->
+
+</div>
+<!-- /wp:group -->
+
+<!-- SECTION 3: Related Products + CTA -->
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"60px","bottom":"60px","left":"30px","right":"30px"}},"color":{"background":"#f7fafc"}},"layout":{"type":"constrained","contentSize":"1100px"}} -->
+<div class="wp-block-group alignfull has-background" style="background-color:#f7fafc;padding-top:60px;padding-right:30px;padding-bottom:60px;padding-left:30px">
+
+<!-- wp:heading {"textAlign":"center","style":{"typography":{"fontSize":"26px","fontStyle":"normal","fontWeight":"700"},"spacing":{"margin":{"bottom":"10px"}}}} -->
+<h2 class="wp-block-heading has-text-align-center" style="font-size:26px;font-style:normal;font-weight:700;margin-bottom:10px">You May Also Need</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph {"align":"center","style":{"typography":{"fontSize":"15px"},"spacing":{"margin":{"bottom":"30px"}}}} -->
+<p class="has-text-align-center" style="font-size:15px;margin-bottom:30px">Complete your project with complementary tower types and services.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:columns {"style":{"spacing":{"blockGap":{"left":"24px"}}}} -->
+<div class="wp-block-columns">
+
+<!-- wp:column -->
+<div class="wp-block-column">
+<!-- wp:group {"style":{"color":{"background":"#ffffff"},"border":{"radius":"8px"},"spacing":{"padding":{"top":"24px","bottom":"24px","left":"24px","right":"24px"},"blockGap":"8px"},"shadow":"var:preset|shadow|natural"},"layout":{"type":"constrained"}} -->
+<div class="wp-block-group has-background" style="background-color:#ffffff;border-radius:8px;padding-top:24px;padding-right:24px;padding-bottom:24px;padding-left:24px;box-shadow:var(--wp--preset--shadow--natural)">
+<!-- wp:heading {"level":4,"style":{"typography":{"fontSize":"16px","fontStyle":"normal","fontWeight":"700"}}} -->
+<h4 class="wp-block-heading" style="font-size:16px;font-style:normal;font-weight:700"><a href="/category/transmission-tower-product/">Transmission Towers</a></h4>
+<!-- /wp:heading -->
+<!-- wp:paragraph {"style":{"typography":{"fontSize":"13px"}}} -->
+<p style="font-size:13px">10kV–500kV lattice angle steel and tubular towers for HV/EHV lines.</p>
+<!-- /wp:paragraph -->
+</div>
+<!-- /wp:group -->
+</div>
+<!-- /wp:column -->
+
+<!-- wp:column -->
+<div class="wp-block-column">
+<!-- wp:group {"style":{"color":{"background":"#ffffff"},"border":{"radius":"8px"},"spacing":{"padding":{"top":"24px","bottom":"24px","left":"24px","right":"24px"},"blockGap":"8px"},"shadow":"var:preset|shadow|natural"},"layout":{"type":"constrained"}} -->
+<div class="wp-block-group has-background" style="background-color:#ffffff;border-radius:8px;padding-top:24px;padding-right:24px;padding-bottom:24px;padding-left:24px;box-shadow:var(--wp--preset--shadow--natural)">
+<!-- wp:heading {"level":4,"style":{"typography":{"fontSize":"16px","fontStyle":"normal","fontWeight":"700"}}} -->
+<h4 class="wp-block-heading" style="font-size:16px;font-style:normal;font-weight:700"><a href="/category/monopole-tower-product/">Monopole Towers</a></h4>
+<!-- /wp:heading -->
+<!-- wp:paragraph {"style":{"typography":{"fontSize":"13px"}}} -->
+<p style="font-size:13px">Single-pole tubular towers for telecom and urban distribution lines.</p>
+<!-- /wp:paragraph -->
+</div>
+<!-- /wp:group -->
+</div>
+<!-- /wp:column -->
+
+<!-- wp:column -->
+<div class="wp-block-column">
+<!-- wp:group {"style":{"color":{"background":"#ffffff"},"border":{"radius":"8px"},"spacing":{"padding":{"top":"24px","bottom":"24px","left":"24px","right":"24px"},"blockGap":"8px"},"shadow":"var:preset|shadow|natural"},"layout":{"type":"constrained"}} -->
+<div class="wp-block-group has-background" style="background-color:#ffffff;border-radius:8px;padding-top:24px;padding-right:24px;padding-bottom:24px;padding-left:24px;box-shadow:var(--wp--preset--shadow--natural)">
+<!-- wp:heading {"level":4,"style":{"typography":{"fontSize":"16px","fontStyle":"normal","fontWeight":"700"}}} -->
+<h4 class="wp-block-heading" style="font-size:16px;font-style:normal;font-weight:700"><a href="/monopole-tower-design/">Tower Design &amp; Specs</a></h4>
+<!-- /wp:heading -->
+<!-- wp:paragraph {"style":{"typography":{"fontSize":"13px"}}} -->
+<p style="font-size:13px">Learn about our engineering capabilities, design software, and standards.</p>
+<!-- /wp:paragraph -->
+</div>
+<!-- /wp:group -->
+</div>
+<!-- /wp:column -->
+
+</div>
+<!-- /wp:columns -->
+
+</div>
+<!-- /wp:group -->
+
+<!-- SECTION 4: Bottom CTA -->
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"60px","bottom":"60px","left":"30px","right":"30px"}},"color":{"background":"#1a3a5c"}},"layout":{"type":"constrained","contentSize":"650px"}} -->
+<div class="wp-block-group alignfull has-background" style="background-color:#1a3a5c;padding-top:60px;padding-right:30px;padding-bottom:60px;padding-left:30px">
+
+<!-- wp:heading {"textAlign":"center","style":{"typography":{"fontSize":"28px","fontStyle":"normal","fontWeight":"700"},"elements":{"link":{"color":{"text":"var:preset|color|white"}}}},"textColor":"white"} -->
+<h2 class="wp-block-heading has-text-align-center has-white-color has-text-color has-link-color" style="font-size:28px;font-style:normal;font-weight:700">Interested in This Tower?</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph {"align":"center","style":{"typography":{"fontSize":"16px","lineHeight":"1.7"},"elements":{"link":{"color":{"text":"var:preset|color|white"}}},"spacing":{"margin":{"top":"10px","bottom":"24px"}}},"textColor":"white"} -->
+<p class="has-text-align-center has-white-color has-text-color has-link-color" style="font-size:16px;line-height:1.7;margin-top:10px;margin-bottom:24px">Send us your line parameters (voltage, span, conductor, wind speed) and we'll provide a complete quotation with GA drawings.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"}} -->
+<div class="wp-block-buttons">
+<!-- wp:button {"backgroundColor":"luminous-vivid-amber","textColor":"black","style":{"typography":{"fontSize":"15px","fontStyle":"normal","fontWeight":"700"},"border":{"radius":"4px"},"spacing":{"padding":{"top":"16px","bottom":"16px","left":"32px","right":"32px"}}}} -->
+<div class="wp-block-button has-custom-font-size" style="font-size:15px;font-style:normal;font-weight:700"><a class="wp-block-button__link has-black-color has-luminous-vivid-amber-background-color has-text-color has-background wp-element-button" href="/contact-us/" style="border-radius:4px;padding-top:16px;padding-right:32px;padding-bottom:16px;padding-left:32px">GET A QUOTE FOR THIS TOWER</a></div>
+<!-- /wp:button -->
+</div>
+<!-- /wp:buttons -->
+
+<!-- wp:paragraph {"align":"center","style":{"typography":{"fontSize":"13px"},"elements":{"link":{"color":{"text":"var:preset|color|luminous-vivid-amber"}}},"spacing":{"margin":{"top":"16px"}}},"textColor":"white"} -->
+<p class="has-text-align-center has-white-color has-text-color has-link-color" style="font-size:13px;margin-top:16px">📧 <a href="mailto:sales@90817.com">sales@90817.com</a> &nbsp;|&nbsp; 📞 +86-318-4431156 &nbsp;|&nbsp; 💬 <a href="https://wa.me/86XXXXXXXXXXX">WhatsApp</a></p>
+<!-- /wp:paragraph -->
+
+</div>
+<!-- /wp:group -->
